@@ -1,0 +1,25 @@
+[tool.poetry]
+name = "jiav-backend-command"
+version = "0.1.0"
+description = "Command backend for jiav"
+authors = ["Vadim Khitrin <me@vkhitrin.com>"]
+license = "BSD-3-Clause"
+readme = "README.md"
+packages = [{include = "jiav"}]
+classifiers = [
+    'Development Status :: 3 - Alpha',
+    'Environment :: Plugins',
+    'License :: OSI Approved :: BSD License',
+    'Operating System :: POSIX :: Linux',
+    'Operating System :: MacOS',
+    'Programming Language :: Python :: 3 :: Only',
+    'Programming Language :: Python :: 3.8',
+    'Topic :: Utilities'
+]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
