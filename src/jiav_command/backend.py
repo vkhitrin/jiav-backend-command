@@ -1,29 +1,11 @@
 #!/usr/bin/env python
-"""
-Copyright 2022 Vadim Khitrin <me@vkhitrin.com>
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-"""
 
 import subprocess
-from collections import namedtuple
 from subprocess import Popen
 
 from jiav import logger
-from jiav.api.backends import BaseBackend
-from jiav.api.schemas.command import schema
+from jiav.backend import BaseBackend, Result
 
-MOCK_STEP = {"cmd": "[true]", "rc": 0}
 
 # Subscribe to logger
 jiav_logger = logger.subscribe_to_logger()
@@ -44,14 +26,21 @@ class CommandBackend(BaseBackend):
         step - Backend excution instructions
     """
 
-    def __init__(self):
+    MOCK_STEP = {"cmd": "[true]", "rc": 0}
+    SCHEMA = {
+        "type": "object",
+        "required": ["cmd", "rc"],
+        "properties": {"cmd": {"type": "array"}, "rc": {"type": "integer"}},
+        "additionalProperties": False,
+    }
+    def __init__(self) -> None:
         self.name = "command"
-        self.schema = schema
-        self.step = MOCK_STEP
+        self.schema = self.SCHEMA
+        self.step = self.MOCK_STEP
         super().__init__(self.name, self.schema, self.step)
 
     # Overrdie method of BaseBackend
-    def execute_backend(self):
+    def execute_backend(self) -> None:
         """
         Execute shell command
 
@@ -61,7 +50,6 @@ class CommandBackend(BaseBackend):
         cmd = [str(_cmd) for _cmd in self.step["cmd"]]
         rc = self.step["rc"]
         # Create a namedtuple to hold the execution result output and errors
-        result = namedtuple("result", ["successful", "output", "errors"])
         jiav_logger.debug(f"Command: {cmd}")
         # Execute command
         shell_run = Popen(
@@ -87,4 +75,4 @@ class CommandBackend(BaseBackend):
             jiav_logger.error("Command failed to execute with the expected return code")
             if errors:
                 jiav_logger.error("Error: {}".format(errors))
-        self.result = result(successful, output, errors)
+        self.result = Result(successful, output, errors)
