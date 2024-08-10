@@ -1,21 +1,27 @@
 [tool.poetry]
 name = "jiav-backend-command"
-version = "0.1.0"
-description = "Command backend for jiav"
+version = "0.2.0"
+description = "Command backed for jiav"
 authors = ["Vadim Khitrin <me@vkhitrin.com>"]
 license = "BSD-3-Clause"
 readme = "README.md"
-packages = [{include = "jiav"}]
+homepage = "https://github.com/vkhitrin/jiav-backend-command"
+repository = "https://github.com/vkhitrin/jiav-backend-command"
+documentation = "https://jiav.readthedocs.io"
+packages = [{ include = "jiav_command", from = "src" }]
 classifiers = [
     'Development Status :: 3 - Alpha',
-    'Environment :: Plugins',
+    'Environment :: Console',
     'License :: OSI Approved :: BSD License',
     'Operating System :: POSIX :: Linux',
     'Operating System :: MacOS',
     'Programming Language :: Python :: 3 :: Only',
     'Programming Language :: Python :: 3.8',
-    'Topic :: Utilities'
+    'Topic :: Utilities',
 ]
+
+[tool.poetry.plugins."jiav.backend"]
+command = "jiav_command.CommandBackend"
 
 [tool.poetry.dependencies]
 python = "^3.8"
@@ -23,3 +29,27 @@ python = "^3.8"
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.isort]
+profile = "black"
+
+[tool.mypy]
+python_version = "3.8"
+files = ["src/**/*.py", "tests/**/*.py"]
+mypy_path = "src"
+show_column_numbers = true
+follow_imports = "normal"
+disallow_untyped_calls = true
+disallow_untyped_defs = true
+check_untyped_defs = true
+disallow_untyped_decorators = true
+disallow_incomplete_defs = true
+disallow_subclassing_any = true
+strict_optional = true
+warn_return_any = true
+warn_no_return = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_unused_configs = true
+no_implicit_reexport = true
+strict_equality = true
